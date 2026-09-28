@@ -1,5 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { NextRequest, NextResponse } from "next/server";
+
+declare global {
+  interface CloudflareEnv {
+    NEXT_PUBLIC_SUPABASE_URL?: string;
+    SUPABASE_SERVICE_ROLE_KEY?: string;
+  }
+}
 
 const MAX_NAME_LENGTH = 120;
 const MAX_EMAIL_LENGTH = 254;
@@ -91,8 +99,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Thank you. Your inquiry has been sent to the school office." });
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const { env } = await getCloudflareContext({ async: true });
+  const url = env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) {
     console.error("Admission inquiry submission is unavailable: server-side Supabase environment variables are missing.");
     return NextResponse.json({ error: "The inquiry service is temporarily unavailable. Please contact the school office." }, { status: 503 });
