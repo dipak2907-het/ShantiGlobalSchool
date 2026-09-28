@@ -83,39 +83,29 @@ Limits can change; check provider dashboards before launch.
    npm run seed
    ```
 
-## Deploy to Cloudflare
+## Deploy to Cloudflare Workers from GitHub
 
-1. Create a free Cloudflare account.
-2. Authenticate:
+**Important:** This application uses Next.js server routes, authentication, and middleware. Deploy it as a **Cloudflare Worker using OpenNext**, not as a Cloudflare Pages static site. If a Cloudflare log says the Wrangler configuration is invalid for Pages or asks for `pages_build_output_dir`, the project was created as Pages; create/import it under **Workers & Pages → Create application → Import a repository** as a Worker instead.
 
-   ```powershell
-   npx wrangler login
-   ```
+1. In Cloudflare, open **Workers & Pages → Create application → Get started → Import a repository**. Connect GitHub and select `dipak2907-het/ShantiGlobalSchool`, branch `main`.
+2. Set the Worker name to `shanti-global-school`, leave the root directory blank, and use:
+   - Build command: `npx opennextjs-cloudflare build`
+   - Deploy command: `npx wrangler deploy`
+3. In **Build variables and secrets**, add these two **build variables** from Supabase → **Project Settings → API**:
+   - `NEXT_PUBLIC_SUPABASE_URL` = the Supabase Project URL
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` = the Supabase publishable key
 
-3. Add each production secret individually. Do not place secrets in [wrangler.jsonc](./wrangler.jsonc):
+   These must be present during the build because Next.js embeds `NEXT_PUBLIC_` values in the browser bundle. Do not use a `service_role` or secret key here.
+4. Start the first deployment. Cloudflare will show a free HTTPS `workers.dev` URL when the build succeeds.
+5. In the Worker, open **Settings → Variables and Secrets** and add those same two values for runtime access. Add `GEMINI_API_KEY` only if enabling the optional Gemini chatbot; otherwise chatbot FAQs still work. Do not add `SUPABASE_SERVICE_ROLE_KEY` or `RESEND_API_KEY` for this build: this website currently does not require either at runtime.
+6. Redeploy if prompted. Open the `workers.dev` address, check public pages, and try `/admin/login`.
+7. In Supabase → **Authentication → URL Configuration**, set the Site URL to the new `workers.dev` URL and add it to the allowed Redirect URLs.
 
-   ```powershell
-   npx wrangler secret put NEXT_PUBLIC_SUPABASE_URL
-   npx wrangler secret put NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-   npx wrangler secret put SUPABASE_URL
-   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-   npx wrangler secret put RESEND_API_KEY
-   npx wrangler secret put GEMINI_API_KEY
-   ```
+When Cloudflare Workers Builds is connected to GitHub, pushes to `main` trigger automatic deployments. See [Cloudflare Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) and the [OpenNext adapter guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/).
 
-4. Test the Worker runtime:
+### Deploy manually instead (not GitHub automatic deploy)
 
-   ```powershell
-   npm run preview
-   ```
-
-5. Deploy:
-
-   ```powershell
-   npm run deploy
-   ```
-
-Cloudflare prints the `workers.dev` HTTPS URL after deployment.
+From PowerShell in the project folder, run `npx wrangler login`, then set local `.env.local` values and use `npm run preview` to test, followed by `npm run deploy`. Never commit `.env.local`.
 
 ## Resend, Gemini, and YouTube
 
