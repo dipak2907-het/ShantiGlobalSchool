@@ -53,13 +53,15 @@ Limits can change; check provider dashboards before launch.
    - Project URL to `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_URL`
    - Publishable key to `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
    - Service-role key to `SUPABASE_SERVICE_ROLE_KEY` (never expose this in browser code).
-3. Apply database schema:
+3. Apply database schema and subsequent migrations:
 
    ```powershell
    npx supabase login
    npx supabase link --project-ref YOUR_PROJECT_REF
    npx supabase db push
    ```
+
+   For an already configured Supabase project, apply new migration files before deploying code that depends on them. The admission form requires `supabase/migrations/20260928010000_public_inquiry_submission.sql`; run its contents once in the Supabase **SQL Editor** if you are not using the Supabase CLI.
 
 4. In hosted Supabase Auth settings, match [supabase/config.toml](./supabase/config.toml):
    - Disable public and email signup.
@@ -97,7 +99,7 @@ Limits can change; check provider dashboards before launch.
 
    These must be present during the build because Next.js embeds `NEXT_PUBLIC_` values in the browser bundle. Do not use a `service_role` or secret key here.
 4. Start the first deployment. Cloudflare will show a free HTTPS `workers.dev` URL when the build succeeds.
-5. In the Worker, open **Settings → Variables and Secrets** and add those same two values for runtime access. Add `GEMINI_API_KEY` only if enabling the optional Gemini chatbot; otherwise chatbot FAQs still work. Do not add `SUPABASE_SERVICE_ROLE_KEY` or `RESEND_API_KEY` for this build: this website currently does not require either at runtime.
+5. In the Worker, open **Settings → Variables and Secrets** and add those same two values for runtime access. Add `SUPABASE_SERVICE_ROLE_KEY` as a **runtime secret** (not a build variable) from Supabase → **Project Settings → API**; the admission inquiry API needs it to call the protected database function. Never put this secret in GitHub, browser code, or a `NEXT_PUBLIC_` variable. Add `GEMINI_API_KEY` only if enabling the optional Gemini chatbot; otherwise chatbot FAQs still work.
 6. Redeploy if prompted. Open the `workers.dev` address, check public pages, and try `/admin/login`.
 7. In Supabase → **Authentication → URL Configuration**, set the Site URL to the new `workers.dev` URL and add it to the allowed Redirect URLs.
 
