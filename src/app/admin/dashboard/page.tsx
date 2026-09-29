@@ -3,6 +3,7 @@ import { AdminPage } from "@/components/admin/admin-page";
 
 const actions = [
   ["Publish notice", "/admin/notices"], ["Upload gallery photos", "/admin/gallery"],
+  ["Edit website content", "/admin/website-content"],
   ["Add student", "/admin/students"], ["Manage timetable", "/admin/timetables"],
   ["Start live event", "/admin/live"], ["Review inquiries", "/admin/inquiries"],
 ];

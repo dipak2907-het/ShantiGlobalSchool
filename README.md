@@ -63,6 +63,8 @@ Limits can change; check provider dashboards before launch.
 
    For an already configured Supabase project, apply new migration files before deploying code that depends on them. The admission form requires `supabase/migrations/20260928010000_public_inquiry_submission.sql`; run its contents once in the Supabase **SQL Editor** if you are not using the Supabase CLI.
 
+   Website content editing requires `supabase/migrations/20260929010000_website_content.sql`. Run that migration in the SQL Editor before deploying the Website Content admin page.
+
 4. In hosted Supabase Auth settings, match [supabase/config.toml](./supabase/config.toml):
    - Disable public and email signup.
    - Require email confirmation.
@@ -152,6 +154,7 @@ Supabase Free does not offer downloadable backups or point-in-time recovery. At 
 | --- | --- |
 | Name, session, address, phone, email, colors, map, principal message | [src/config/school.ts](./src/config/school.ts) |
 | FAQ, dummy text, public placeholder content | [src/config/school.ts](./src/config/school.ts) |
+| Public school details, homepage, principal, About, map, and admission copy | Admin → Website content (Principal/Admin only; requires the website-content migration) |
 | Logo and placeholder images | [public/images/placeholders](./public/images/placeholders) |
 | Tables and RLS | [supabase/migrations](./supabase/migrations) |
 | Auth security | [supabase/config.toml](./supabase/config.toml) and Supabase dashboard |

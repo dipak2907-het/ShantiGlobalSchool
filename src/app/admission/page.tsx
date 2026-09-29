@@ -3,11 +3,12 @@
 import { FormEvent, useState } from "react";
 import { PageHeading } from "@/components/public/page-heading";
 import { PageShell } from "@/components/public/page-shell";
-import { schoolContent } from "@/config/school";
+import { useSiteContent } from "@/components/public/site-content-provider";
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 
 export default function AdmissionPage() {
+  const content = useSiteContent();
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [message, setMessage] = useState("");
 
@@ -44,7 +45,7 @@ export default function AdmissionPage() {
   }
 
   return <PageShell>
-    <PageHeading title={schoolContent.admission.title} description={schoolContent.admission.description} />
+    <PageHeading title={content.admission_title} description={content.admission_description} />
     <form onSubmit={submit} className="grid max-w-2xl gap-5 rounded-xl border p-6">
       <label>Full name<input required name="name" maxLength={120} autoComplete="name" className="mt-1 w-full rounded border p-3" /></label>
       <label>Phone<input required name="phone" inputMode="tel" autoComplete="tel" maxLength={30} pattern="[0-9+() -]{7,30}" title="Enter a phone number containing 7 to 30 digits or phone symbols." className="mt-1 w-full rounded border p-3" /></label>

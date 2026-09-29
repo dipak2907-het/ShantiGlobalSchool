@@ -1,6 +1,6 @@
 /**
- * The only source of school-specific content.
- * Replace every value containing PLACEHOLDER before publishing the website.
+ * Default school-specific content, used until the Principal/Admin saves the
+ * editable website content in Supabase. Replace PLACEHOLDER values as a fallback.
  */
 export const school = {
   name: "Shanti Global School",

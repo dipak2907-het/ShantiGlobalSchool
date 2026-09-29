@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
-import { school } from "@/config/school";
+import { useSiteContent } from "@/components/public/site-content-provider";
 
 type Role = "principal_admin" | "staff";
 type Profile = { full_name: string; role: Role };
@@ -19,11 +19,13 @@ const adminLinks: { href: string; label: string; roles: readonly Role[] }[] = [
   { href: "/admin/events", label: "Events & holidays", roles: ["principal_admin"] },
   { href: "/admin/inquiries", label: "Inquiries", roles: ["principal_admin"] },
   { href: "/admin/live", label: "Go live", roles: ["principal_admin"] },
+  { href: "/admin/website-content", label: "Website content", roles: ["principal_admin"] },
   { href: "/admin/activity", label: "Activity log", roles: ["principal_admin"] },
   { href: "/admin/settings", label: "Settings", roles: ["principal_admin", "staff"] },
 ] as const;
 
 export function AdminShell({ children }: { children: ReactNode }) {
+  const content = useSiteContent();
   const router = useRouter();
   const pathname = usePathname();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -49,7 +51,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
   if (loading || !profile) return <main className="grid min-h-screen place-items-center">Loading secure workspace…</main>;
   return <div className="min-h-screen bg-slate-100 lg:grid lg:grid-cols-[16rem_1fr]">
-    <aside className="bg-slate-950 p-5 text-slate-200"><Link href="/admin/dashboard" className="font-bold text-white">{school.name}<span className="block text-xs font-normal text-slate-400">Admin workspace</span></Link>
+    <aside className="bg-slate-950 p-5 text-slate-200"><Link href="/admin/dashboard" className="font-bold text-white">{content.school_name}<span className="block text-xs font-normal text-slate-400">Admin workspace</span></Link>
       <p className="mt-8 text-sm font-semibold">{profile.full_name}</p><p className="text-xs uppercase tracking-wide text-slate-400">{profile.role === "principal_admin" ? "Principal / admin" : "Staff"}</p>
       <nav className="mt-6 flex gap-1 overflow-x-auto lg:flex-col" aria-label="Admin navigation">{adminLinks.filter((link) => link.roles.includes(profile.role)).map((link) => <Link key={link.href} href={link.href} className={`whitespace-nowrap rounded px-3 py-2 text-sm ${pathname === link.href ? "bg-blue-700 text-white" : "hover:bg-slate-800"}`}>{link.label}</Link>)}</nav>
       <button onClick={signOut} className="mt-8 rounded border border-slate-600 px-3 py-2 text-sm hover:bg-slate-800">Sign out</button>

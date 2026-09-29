@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { school } from "@/config/school";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
+import { SiteContentProvider } from "@/components/public/site-content-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}<ChatbotWidget /></body>
+      <body className="min-h-full flex flex-col"><SiteContentProvider>{children}</SiteContentProvider><ChatbotWidget /></body>
     </html>
   );
 }
