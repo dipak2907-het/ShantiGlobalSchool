@@ -3,5 +3,5 @@ import { PageHeading } from "@/components/public/page-heading";
 import { PageShell } from "@/components/public/page-shell";
 
 export default function GalleryPage() {
-  return <PageShell><PageHeading title="Gallery" description="PLACEHOLDER: Browse school moments by year and event." /><GalleryView /></PageShell>;
+  return <PageShell><PageHeading title="Gallery" description="Browse published school photos by year and event." /><GalleryView /></PageShell>;
 }

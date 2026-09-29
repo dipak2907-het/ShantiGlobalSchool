@@ -160,6 +160,14 @@ Supabase Free does not offer downloadable backups or point-in-time recovery. At 
 | Auth security | [supabase/config.toml](./supabase/config.toml) and Supabase dashboard |
 | Security headers | [next.config.ts](./next.config.ts) |
 
+### Managing gallery photos
+
+1. Sign in with an approved admin/staff account and open **Admin → Gallery**.
+2. Add an album heading, event name, event date, a short photo description, and one or more JPEG, PNG, or WebP files (up to 5 MB each, 20 files per upload).
+3. To show the album on the public Gallery, select **Publish this album and its photos** and confirm publication permission for every selected image. Otherwise, the album stays private.
+4. Use **Edit** on a saved album to update its details, add photos, change each existing photo description, remove photos, or publish/unpublish the album. The album must retain at least one photo.
+5. Public photos are grouped under their album heading on the Gallery page, with year/event filters and a photo viewer.
+
 ## Things to change before launch
 
 - [ ] Replace every `PLACEHOLDER` in [src/config/school.ts](./src/config/school.ts).
